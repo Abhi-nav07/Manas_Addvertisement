@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Service } from "@/types/content";
-import { portfolio } from "@/constants/content";
+import { portfolio, portfolioImages } from "@/constants/content";
 import { Container } from "@/components/layout/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { ParallaxLayer } from "@/motion/parallax";
@@ -45,11 +45,11 @@ export function ServicePortfolio({ service }: { service: Service }) {
                 <div className="relative mb-6 aspect-[4/3] w-full overflow-hidden rounded-2xl bg-neutral-100">
                   <ParallaxLayer speed={0.1} className="h-full w-full">
                     <Image
-                      src={`https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=2070&auto=format&fit=crop`}
+                      src={portfolioImages[project.slug] || "https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=1600&q=80"}
                       alt={project.title}
                       fill
                       className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                      sizes="(max-width: 768px) 100vw, 50vw"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   </ParallaxLayer>
                   <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-primary)]/80 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />

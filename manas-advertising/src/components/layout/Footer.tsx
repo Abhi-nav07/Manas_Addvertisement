@@ -1,4 +1,6 @@
 import Link from "next/link";
+import Image from "next/image";
+
 import { Camera, Briefcase, MessageCircle, Mail, MapPin, Phone, ArrowUpRight } from "lucide-react";
 import { Container } from "./Container";
 import { Reveal } from "../ui/Reveal";
@@ -10,18 +12,16 @@ const columns = [
   {
     title: "Company",
     links: [
+      { label: "Home", href: "/" },
       { label: "About", href: "/about" },
       { label: "Services", href: "/services" },
-      { label: "Portfolio", href: "/portfolio" },
-      { label: "Careers", href: "/careers" },
     ],
   },
   {
-    title: "Resources",
+    title: "Explore",
     links: [
+      { label: "Work / Portfolio", href: "/portfolio" },
       { label: "Gallery", href: "/gallery" },
-      { label: "Testimonials", href: "/testimonials" },
-      { label: "FAQ", href: "/faq" },
       { label: "Contact", href: "/contact" },
     ],
   },
@@ -65,8 +65,16 @@ export function Footer() {
           <Reveal delay={0.1}>
             <div>
               <MagneticHover strength={5} className="block w-max">
-                <Link href="/" className="group text-xl font-bold tracking-wide flex items-center">
-                  MANAS<span className="text-[var(--color-accent)] transition-transform duration-300 group-hover:scale-125">.</span>
+                <Link href="/" className="group flex items-center">
+                  <div className="relative h-12 w-36 overflow-hidden transition-transform duration-500 ease-out group-hover:scale-105">
+                    <Image 
+                      src="https://file.garden/amYCKVkR9Rqi4_W9/Logo" 
+                      alt="Manas Advertising Logo" 
+                      fill 
+                      className="object-contain"
+                      sizes="(max-width: 768px) 144px, 144px"
+                    />
+                  </div>
                 </Link>
               </MagneticHover>
               <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/60">
@@ -74,11 +82,15 @@ export function Footer() {
                 and campaigns for brands that refuse to blend in.
               </p>
               <div className="mt-6 flex gap-4">
-                {[Camera, Briefcase, MessageCircle].map((Icon, i) => (
+                {[
+                  { Icon: Camera, label: "Visit our Instagram" },
+                  { Icon: Briefcase, label: "Visit our LinkedIn" },
+                  { Icon: MessageCircle, label: "Visit our Twitter" }
+                ].map(({ Icon, label }, i) => (
                   <MagneticHover key={i} strength={8}>
                     <a
                       href="#"
-                      aria-label="Social media link"
+                      aria-label={label}
                       className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70 transition-all duration-300 hover:border-[var(--color-accent)] hover:bg-[var(--color-accent)]/10 hover:text-[var(--color-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-primary)]"
                     >
                       <Icon size={18} />
@@ -125,20 +137,23 @@ export function Footer() {
                   <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/5 transition-colors group-hover:bg-[var(--color-accent)]/20">
                     <MapPin size={14} className="text-[var(--color-accent)]" />
                   </div>
-                  <span className="transition-colors group-hover:text-white">Bandra West, Mumbai, India</span>
+                  <span className="transition-colors group-hover:text-white max-w-[200px]">1st Floor Nanaksar Kota Stone, In Front Of ICICI Bank, AB Road, Dewas Naka, Indore (M.P.)</span>
                 </li>
-                <li className="flex items-center gap-3 group">
-                  <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/5 transition-colors group-hover:bg-[var(--color-accent)]/20">
+                <li className="flex items-start gap-3 group">
+                  <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/5 transition-colors group-hover:bg-[var(--color-accent)]/20">
                     <Phone size={14} className="text-[var(--color-accent)]" />
                   </div>
-                  <a href="tel:+912212345678" className="transition-colors group-hover:text-white" data-cursor="pointer">+91 22 1234 5678</a>
+                  <div className="flex flex-col gap-1.5">
+                    <a href="tel:+919827206185" className="transition-colors group-hover:text-white" data-cursor="pointer">+91 98272 06185</a>
+                    <a href="tel:+917470562475" className="transition-colors group-hover:text-white" data-cursor="pointer">+91 74705 62475</a>
+                  </div>
                 </li>
                 <li className="flex items-center gap-3 group">
                   <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/5 transition-colors group-hover:bg-[var(--color-accent)]/20">
                     <Mail size={14} className="text-[var(--color-accent)]" />
                   </div>
-                  <a href="mailto:hello@manasadvertising.in" className="transition-colors group-hover:text-white" data-cursor="pointer">
-                    hello@manasadvertising.in
+                  <a href="mailto:enquiry@manasadvertising.in" className="transition-colors group-hover:text-white break-all" data-cursor="pointer">
+                    enquiry@manasadvertising.in
                   </a>
                 </li>
               </ul>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
@@ -32,8 +33,17 @@ export function Navbar() {
       )}
     >
       <Container className="flex h-20 items-center justify-between">
-        <Link href="/" className="group flex items-center text-lg font-semibold tracking-wide text-white">
-          MANAS<span className="text-[var(--color-accent)] transition-transform duration-300 group-hover:scale-125">.</span>
+        <Link href="/" className="group flex items-center">
+          <div className="relative h-10 w-32 md:h-12 md:w-36 overflow-hidden transition-transform duration-500 ease-out group-hover:scale-105">
+            <Image 
+              src="https://file.garden/amYCKVkR9Rqi4_W9/Logo" 
+              alt="Manas Advertising Logo" 
+              fill 
+              className="object-contain"
+              sizes="(max-width: 768px) 128px, 144px"
+              priority
+            />
+          </div>
         </Link>
 
         <nav className="hidden gap-9 md:flex">
@@ -98,7 +108,7 @@ export function Navbar() {
                   key={l.href}
                   href={l.href}
                   onClick={() => setOpen(false)}
-                  className="text-base font-medium text-white/85"
+                  className="text-base font-medium text-white/85 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-primary)] rounded-sm"
                 >
                   {l.label}
                 </Link>

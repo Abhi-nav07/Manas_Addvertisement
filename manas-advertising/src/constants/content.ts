@@ -151,6 +151,15 @@ export const clientLogos = [
   "Meridian",
 ];
 
+export const portfolioImages: Record<string, string> = {
+  "saffron-spice-co": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=1600&q=80",
+  "urbanhive-coworking": "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80",
+  "veloce-fitness": "https://images.unsplash.com/photo-1512314889357-e157c22f938d?w=1600&q=80",
+  "namaste-organics": "https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=1600&q=80",
+  "chai-culture": "https://images.unsplash.com/photo-1582281173200-a94f6f87d4de?w=1600&q=80",
+  "meridian-finance": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1600&q=80",
+};
+
 
 export const testimonials: Testimonial[] = [
   {

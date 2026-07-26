@@ -7,7 +7,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
 import { Card } from "@/components/ui/Card";
 import { ImageReveal } from "@/components/ui/ImageReveal";
-import Image from "next/image";
+
 import { WhyChooseUs } from "@/components/sections/WhyChooseUs";
 import { ProcessTimeline } from "@/components/sections/ProcessTimeline";
 import { CTASection } from "@/components/sections/CTASection";
@@ -65,12 +65,14 @@ export default function AboutPage() {
             {/* Scrolling Visuals Column */}
             <div className="flex flex-col gap-10">
               <ImageReveal className="relative aspect-square w-full overflow-hidden rounded-3xl bg-neutral-100 shadow-xl">
-                <Image 
-                  src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1200&auto=format&fit=crop" 
-                  alt="Our studio"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
+                <video 
+                  src="/videos/bg.mp4" 
+                  className="absolute inset-0 h-full w-full object-cover"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
                 />
               </ImageReveal>
 

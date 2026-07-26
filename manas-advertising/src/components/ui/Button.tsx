@@ -23,11 +23,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         className={cn(
-          "inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm font-medium tracking-wide transition-all duration-500 ease-out active:scale-95",
+          "inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm font-medium tracking-wide transition-all duration-500 ease-out active:scale-95 disabled:opacity-50 disabled:pointer-events-none disabled:active:scale-100",
           "focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-white",
           variants[variant],
           className
         )}
+        aria-disabled={props.disabled}
         {...props}
       >
         <span className="relative z-10 flex items-center gap-2 transition-transform duration-500 group-hover:scale-105">{props.children}</span>

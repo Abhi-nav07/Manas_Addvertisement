@@ -14,9 +14,10 @@ export const metadata: Metadata = {
 };
 
 const details = [
-  { icon: MapPin, label: "Bandra West, Mumbai, India" },
-  { icon: Phone, label: "+91 22 1234 5678" },
-  { icon: Mail, label: "hello@manasadvertising.in" },
+  { icon: MapPin, label: "1st Floor Nanaksar Kota Stone, In Front Of ICICI Bank, AB Road, Dewas Naka, Indore (M.P.)" },
+  { icon: Phone, label: "+91 98272 06185", href: "tel:+919827206185" },
+  { icon: Phone, label: "+91 74705 62475", href: "tel:+917470562475" },
+  { icon: Mail, label: "enquiry@manasadvertising.in", href: "mailto:enquiry@manasadvertising.in" },
   { icon: Clock, label: "Mon–Fri, 9:30am – 6:30pm IST" },
 ];
 
@@ -38,12 +39,18 @@ export default function ContactPage() {
                 Reach us directly
               </h2>
               <ul className="space-y-4">
-                {details.map(({ icon: Icon, label }) => (
-                  <li key={label} className="flex items-center gap-3 text-sm text-neutral-500">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-50 text-[var(--color-primary)]">
+                {details.map(({ icon: Icon, label, href }, i) => (
+                  <li key={i} className="flex items-center gap-3 text-sm text-neutral-500">
+                    <span className="flex shrink-0 h-10 w-10 items-center justify-center rounded-full bg-neutral-50 text-[var(--color-primary)]">
                       <Icon size={16} />
                     </span>
-                    {label}
+                    {href ? (
+                      <a href={href} className="hover:text-[var(--color-accent)] transition-colors" data-cursor="pointer">
+                        {label}
+                      </a>
+                    ) : (
+                      <span>{label}</span>
+                    )}
                   </li>
                 ))}
               </ul>

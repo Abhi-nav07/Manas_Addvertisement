@@ -6,7 +6,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Badge } from "@/components/ui/Badge";
 import { Reveal } from "@/components/ui/Reveal";
 import { ParallaxLayer } from "@/motion/parallax";
-import { portfolio } from "@/constants/content";
+import { portfolio, portfolioImages } from "@/constants/content";
 
 export function FeaturedPortfolio() {
   const featured = portfolio.slice(0, 3);
@@ -30,12 +30,7 @@ export function FeaturedPortfolio() {
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {featured.map((item, i) => {
-            // High-quality abstract placeholders for agency portfolio
-            const images = [
-              "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop",
-              "https://images.unsplash.com/photo-1604871000636-074fa5117945?q=80&w=1200&auto=format&fit=crop",
-              "https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=1200&auto=format&fit=crop"
-            ];
+            const imageUrl = portfolioImages[item.slug] || "https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=1600&q=80";
             
             return (
               <Reveal key={item.slug} delay={i * 0.08}>
@@ -46,7 +41,7 @@ export function FeaturedPortfolio() {
                     <div className="absolute -inset-[15%]">
                       <ParallaxLayer speed={0.1} className="h-full w-full">
                         <Image 
-                          src={images[i]} 
+                          src={imageUrl} 
                           alt={item.title}
                           fill
                           className="object-cover transition-transform duration-1000 ease-out group-hover:scale-110"

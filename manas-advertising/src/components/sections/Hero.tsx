@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { Container } from "@/components/layout/Container";
@@ -14,6 +15,31 @@ export function Hero() {
   return (
     <section className="relative flex min-h-screen items-center overflow-hidden bg-transparent pt-20">
       
+      {/* Background Image */}
+      <div className="absolute inset-0">
+        <Image src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80" alt="Background" fill className="object-cover opacity-20" priority sizes="100vw" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary)]/90 to-[var(--color-primary)]/40" />
+      </div>
+
+      {/* Premium Oversized Brand Watermark */}
+      <ParallaxLayer speed={0.8} className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        <motion.div 
+          initial={reduceMotion ? false : { opacity: 0, x: 100 }}
+          animate={{ opacity: 0.03, x: 0 }}
+          transition={{ duration: 2.5, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+          className="absolute right-0 top-1/2 h-[50vh] w-[200vw] md:h-[90vh] md:w-[100vw] -translate-y-1/2 translate-x-[30%] md:translate-x-[25%]"
+        >
+          <Image 
+            src="https://file.garden/amYCKVkR9Rqi4_W9/Logo" 
+            alt="MANAS Watermark" 
+            fill 
+            className="object-contain mix-blend-screen"
+            priority
+            sizes="100vw"
+          />
+        </motion.div>
+      </ParallaxLayer>
+
       <ParallaxLayer speed={1.2} className="absolute inset-0">
         <AmbientParticles count={30} />
       </ParallaxLayer>

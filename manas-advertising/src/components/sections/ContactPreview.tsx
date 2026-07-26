@@ -6,9 +6,10 @@ import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
 
 const details = [
-  { icon: MapPin, label: "Bandra West, Mumbai, India" },
-  { icon: Phone, label: "+91 22 1234 5678" },
-  { icon: Mail, label: "hello@manasadvertising.in" },
+  { icon: MapPin, label: "1st Floor Nanaksar Kota Stone, In Front Of ICICI Bank, AB Road, Dewas Naka, Indore (M.P.)" },
+  { icon: Phone, label: "+91 98272 06185", href: "tel:+919827206185" },
+  { icon: Phone, label: "+91 74705 62475", href: "tel:+917470562475" },
+  { icon: Mail, label: "enquiry@manasadvertising.in", href: "mailto:enquiry@manasadvertising.in" },
 ];
 
 export function ContactPreview() {
@@ -23,12 +24,18 @@ export function ContactPreview() {
           />
           <Reveal className="space-y-6">
             <ul className="space-y-4">
-              {details.map(({ icon: Icon, label }) => (
-                <li key={label} className="flex items-center gap-3 text-sm text-neutral-500">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[var(--color-primary)] shadow-sm">
+              {details.map(({ icon: Icon, label, href }, i) => (
+                <li key={i} className="flex items-center gap-3 text-sm text-neutral-500">
+                  <span className="flex shrink-0 h-10 w-10 items-center justify-center rounded-full bg-white text-[var(--color-primary)] shadow-sm">
                     <Icon size={16} />
                   </span>
-                  {label}
+                  {href ? (
+                    <a href={href} className="hover:text-[var(--color-accent)] transition-colors" data-cursor="pointer">
+                      {label}
+                    </a>
+                  ) : (
+                    <span>{label}</span>
+                  )}
                 </li>
               ))}
             </ul>

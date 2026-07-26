@@ -5,12 +5,25 @@ import { PageHero } from "@/components/layout/PageHero";
 import { Container } from "@/components/layout/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { CTASection } from "@/components/sections/CTASection";
+import Image from "next/image";
 import { portfolio } from "@/constants/content";
 
 export const metadata: Metadata = {
   title: "Gallery",
   description: "A visual gallery of Manas Advertising's brand and campaign work.",
 };
+
+const galleryImages = [
+  "https://images.unsplash.com/photo-1555529733-0e670560f7e1?w=1600&q=80",
+  "https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=1600&q=80",
+  "https://images.unsplash.com/photo-1573164713988-8665fc963095?w=1600&q=80",
+  "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1600&q=80",
+  "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1600&q=80",
+  "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1600&q=80",
+  "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1600&q=80",
+  "https://images.unsplash.com/photo-1551434678-e076c223a692?w=1600&q=80",
+  "https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=1600&q=80"
+];
 
 export default function GalleryPage() {
   const tiles = [...portfolio, ...portfolio].slice(0, 9);
@@ -39,7 +52,9 @@ export default function GalleryPage() {
                       i % 5 === 0 ? "aspect-square" : "aspect-square"
                     }`}
                   >
-                    <span className="text-xs font-medium uppercase tracking-wide">
+                    <Image src={galleryImages[i % galleryImages.length]} alt={item.client} fill className="object-cover" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)]/50 to-[#1a3155]/50" />
+                    <span className="relative z-10 text-xs font-medium uppercase tracking-wide">
                       {item.client}
                     </span>
                   </div>
