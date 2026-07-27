@@ -110,6 +110,8 @@ export function ContactForm() {
             initial={{ opacity: 0, scale: 0.9, filter: "blur(4px)" }}
             animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            role="status"
+            aria-live="polite"
             className="flex flex-col items-center justify-center rounded-3xl border border-black/5 bg-white p-12 text-center shadow-2xl shadow-black/5"
           >
             <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-green-50 text-green-500 ring-8 ring-green-50/50">

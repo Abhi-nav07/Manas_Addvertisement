@@ -55,28 +55,28 @@ export function FeaturedPortfolio() {
                     <div className="absolute inset-0 bg-gradient-to-tr from-[var(--color-accent)]/20 to-transparent opacity-0 mix-blend-overlay transition-opacity duration-700 group-hover:opacity-100" />
                     
                     {/* Content Reveal */}
-                    <div className="absolute inset-0 flex flex-col justify-end p-8 translate-y-4 transition-transform duration-500 ease-out group-hover:translate-y-0">
+                    <div className="absolute inset-0 flex flex-col justify-end p-8 md:translate-y-4 transition-transform duration-500 ease-out md:group-hover:translate-y-0">
                       <div className="overflow-hidden mb-4">
-                        <Badge className="w-fit bg-white/10 text-white backdrop-blur-md border border-white/20 shadow-lg translate-y-full transition-transform duration-500 ease-out group-hover:translate-y-0 delay-75">
+                        <Badge className="w-fit bg-white/10 text-white backdrop-blur-md border border-white/20 shadow-lg md:translate-y-full transition-transform duration-500 ease-out md:group-hover:translate-y-0 delay-75">
                           {item.category}
                         </Badge>
                       </div>
                       
                       <div className="overflow-hidden">
-                        <h3 className="font-display text-2xl font-semibold text-white translate-y-full transition-transform duration-500 ease-out group-hover:translate-y-0 delay-100">
+                        <h3 className="font-display text-2xl font-semibold text-white md:translate-y-full transition-transform duration-500 ease-out md:group-hover:translate-y-0 delay-100">
                           {item.title}
                         </h3>
                       </div>
                       
                       <div className="overflow-hidden mt-2">
-                        <p className="text-sm text-white/70 translate-y-full transition-transform duration-500 ease-out group-hover:translate-y-0 delay-150">
+                        <p className="text-sm text-white/70 md:translate-y-full transition-transform duration-500 ease-out md:group-hover:translate-y-0 delay-150">
                           {item.client} · {item.year}
                         </p>
                       </div>
                     </div>
                     
                     {/* Animated CTA Arrow */}
-                    <div className="absolute right-6 top-6 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white opacity-0 -translate-y-4 translate-x-4 transition-all duration-500 ease-out group-hover:opacity-100 group-hover:translate-y-0 group-hover:translate-x-0 delay-75">
+                    <div className="absolute right-6 top-6 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white opacity-0 md:-translate-y-4 md:translate-x-4 transition-all duration-500 ease-out group-hover:opacity-100 group-hover:translate-y-0 group-hover:translate-x-0 delay-75 max-md:hidden">
                       <ArrowUpRight size={20} className="transition-transform group-hover:scale-110" />
                     </div>
                   </div>

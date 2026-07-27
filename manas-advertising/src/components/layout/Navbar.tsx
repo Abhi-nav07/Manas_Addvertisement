@@ -86,9 +86,9 @@ export function Navbar() {
           aria-expanded={open}
           aria-controls="mobile-menu"
           onClick={() => setOpen((v) => !v)}
-          className="text-white md:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-4 focus-visible:ring-offset-[var(--color-primary)] rounded-sm"
+          className="-mr-2.5 flex h-11 w-11 items-center justify-center text-white md:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-4 focus-visible:ring-offset-[var(--color-primary)] rounded-full"
         >
-          {open ? <X size={26} /> : <Menu size={26} />}
+          {open ? <X size={24} /> : <Menu size={24} />}
         </button>
       </Container>
 
@@ -100,22 +100,42 @@ export function Navbar() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="overflow-hidden bg-[var(--color-primary)] md:hidden"
+            className="overflow-hidden border-t border-white/10 bg-[var(--color-primary)] md:hidden"
           >
-            <Container className="flex flex-col gap-5 py-6">
-              {links.map((l) => (
-                <Link
-                  key={l.href}
-                  href={l.href}
-                  onClick={() => setOpen(false)}
-                  className="text-base font-medium text-white/85 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-primary)] rounded-sm"
-                >
-                  {l.label}
+            <Container className="flex flex-col gap-1 py-6">
+              {links.map((l, i) => {
+                const isActive = pathname === l.href || (l.href !== "/" && pathname?.startsWith(l.href));
+                return (
+                  <motion.div
+                    key={l.href}
+                    initial={{ opacity: 0, x: -12 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.05 + i * 0.05, duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <Link
+                      href={l.href}
+                      onClick={() => setOpen(false)}
+                      className={cn(
+                        "flex items-center justify-between border-b border-white/5 py-3.5 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-primary)] rounded-sm",
+                        isActive ? "text-white" : "text-white/70 hover:text-white"
+                      )}
+                    >
+                      {l.label}
+                      {isActive && <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-accent)]" />}
+                    </Link>
+                  </motion.div>
+                );
+              })}
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.05 + links.length * 0.05, duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                className="pt-5"
+              >
+                <Link href="/contact" onClick={() => setOpen(false)}>
+                  <Button className="w-full">Start a Project</Button>
                 </Link>
-              ))}
-              <Link href="/contact" onClick={() => setOpen(false)}>
-                <Button className="w-full">Start a Project</Button>
-              </Link>
+              </motion.div>
             </Container>
           </motion.div>
         )}

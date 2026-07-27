@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, ChevronDown } from "lucide-react";
 import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/Button";
 import { ParallaxLayer } from "@/motion/parallax";
@@ -15,10 +15,10 @@ export function Hero() {
   return (
     <section className="relative flex min-h-screen items-center overflow-hidden bg-transparent pt-20">
       
-      {/* Background Image */}
-      <div className="absolute inset-0">
-        <Image src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80" alt="Background" fill className="object-cover opacity-20" priority sizes="100vw" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary)]/90 to-[var(--color-primary)]/40" />
+      {/* Background */}
+      <div className="absolute inset-0 bg-[var(--color-primary)]">
+        <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)] via-[var(--color-primary)] to-[#050D1A]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_70%_20%,rgba(var(--color-accent-rgb),0.10),transparent)]" />
       </div>
 
       {/* Premium Oversized Brand Watermark */}
@@ -128,6 +128,21 @@ export function Hero() {
           ))}
         </motion.div>
       </Container>
+
+      <motion.div
+        initial={reduceMotion ? false : { opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.6, duration: 1 }}
+        className="absolute bottom-8 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 text-white/40 md:flex"
+      >
+        <span className="text-[10px] uppercase tracking-[0.2em]">Scroll</span>
+        <motion.div
+          animate={reduceMotion ? {} : { y: [0, 6, 0] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <ChevronDown size={16} />
+        </motion.div>
+      </motion.div>
     </section>
   );
 }
