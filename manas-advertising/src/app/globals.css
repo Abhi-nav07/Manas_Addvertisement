@@ -17,8 +17,9 @@
 :root {
   --color-primary: #0b1b33;
   --color-accent: #e8a93b;
-  --font-display: Georgia, "Playfair Display", serif;
-  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif;
+  --color-accent-rgb: 232, 169, 59;
+  --font-display: var(--font-display-family), Georgia, serif;
+  --font-body: var(--font-body-family), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 /* Cinematic Themes */
@@ -29,26 +30,55 @@ body {
 body.theme-home {
   --color-primary: #0b1b33;
   --color-accent: #e8a93b;
+  --color-accent-rgb: 232, 169, 59;
 }
 
 body.theme-services {
   --color-primary: #0f0c29;
   --color-accent: #b4a3ec;
+  --color-accent-rgb: 180, 163, 236;
 }
 
 body.theme-about {
   --color-primary: #00332c;
   --color-accent: #d4af37;
+  --color-accent-rgb: 212, 175, 55;
 }
 
 body.theme-contact {
   --color-primary: #1a2a3a;
   --color-accent: #add8e6;
+  --color-accent-rgb: 173, 216, 230;
 }
 
 body.theme-portfolio {
   --color-primary: #0a0a0a;
   --color-accent: #c0c0c0;
+  --color-accent-rgb: 192, 192, 192;
+}
+
+html[data-pretheme="theme-services"] {
+  --color-primary: #0f0c29;
+  --color-accent: #b4a3ec;
+  --color-accent-rgb: 180, 163, 236;
+}
+
+html[data-pretheme="theme-about"] {
+  --color-primary: #00332c;
+  --color-accent: #d4af37;
+  --color-accent-rgb: 212, 175, 55;
+}
+
+html[data-pretheme="theme-contact"] {
+  --color-primary: #1a2a3a;
+  --color-accent: #add8e6;
+  --color-accent-rgb: 173, 216, 230;
+}
+
+html[data-pretheme="theme-portfolio"] {
+  --color-primary: #0a0a0a;
+  --color-accent: #c0c0c0;
+  --color-accent-rgb: 192, 192, 192;
 }
 
 html {
@@ -108,4 +138,3 @@ body {
     @apply bg-primary/40 backdrop-blur-md border border-white/10;
   }
 }
-

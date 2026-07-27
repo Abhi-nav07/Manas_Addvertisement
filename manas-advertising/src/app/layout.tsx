@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import { ScrollToTop } from "@/components/ui/ScrollToTop";
 import { MotionProvider } from "@/motion/provider";
@@ -7,6 +8,20 @@ import { GlobalEnvironment } from "@/motion/GlobalEnvironment";
 import { LivingCursor } from "@/components/ui/LivingCursor";
 
 const SITE_URL = "https://manasadvertising.in";
+
+const playfairDisplay = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-display-family",
+  display: "swap",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-body-family",
+  display: "swap",
+});
 
 export const viewport: import("next").Viewport = {
   themeColor: "#050505",
@@ -50,7 +65,37 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className="antialiased">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "AdvertisingAgency",
+              name: "Manas Advertising",
+              url: SITE_URL,
+              image: `${SITE_URL}/og-image.jpg`,
+              telephone: ["+91 98272 06185", "+91 74705 62475"],
+              email: "enquiry@manasadvertising.in",
+              address: {
+                "@type": "PostalAddress",
+                streetAddress:
+                  "1st Floor Nanaksar Kota Stone, In Front Of ICICI Bank, AB Road, Dewas Naka",
+                addressLocality: "Indore",
+                addressRegion: "MP",
+                addressCountry: "IN",
+              },
+              openingHours: "Mo-Fr 09:30-18:30",
+            }),
+          }}
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var p=window.location.pathname,c="theme-home";if(p.indexOf("/services")===0)c="theme-services";else if(p.indexOf("/portfolio")===0)c="theme-portfolio";else if(p.indexOf("/contact")===0)c="theme-contact";else if(p.indexOf("/about")===0)c="theme-about";document.documentElement.setAttribute("data-pretheme",c);}catch(e){}})();`,
+          }}
+        />
+      </head>
+      <body className={`${playfairDisplay.variable} ${inter.variable} antialiased`}>
         <ErrorBoundary>
           <LivingCursor />
           <GlobalEnvironment />
