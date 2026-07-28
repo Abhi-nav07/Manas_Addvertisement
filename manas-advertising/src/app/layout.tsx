@@ -6,6 +6,8 @@ import { MotionProvider } from "@/motion/provider";
 import { ScrollProgress } from "@/components/ui/ScrollProgress";
 import { GlobalEnvironment } from "@/motion/GlobalEnvironment";
 import { LivingCursor } from "@/components/ui/LivingCursor";
+import { Preloader } from "@/components/ui/Preloader";
+import { PageTransition } from "@/components/layout/PageTransition";
 
 const SITE_URL = "https://manasadvertising.in";
 
@@ -94,6 +96,11 @@ export default function RootLayout({
             __html: `(function(){try{var p=window.location.pathname,c="theme-home";if(p.indexOf("/services")===0)c="theme-services";else if(p.indexOf("/portfolio")===0)c="theme-portfolio";else if(p.indexOf("/contact")===0)c="theme-contact";else if(p.indexOf("/about")===0)c="theme-about";document.documentElement.setAttribute("data-pretheme",c);}catch(e){}})();`,
           }}
         />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{if(sessionStorage.getItem("manas_preloader_played")){document.documentElement.classList.add("preloader-done");}}catch(e){}})();`,
+          }}
+        />
       </head>
       <body className={`${playfairDisplay.variable} ${inter.variable} antialiased`}>
         <ErrorBoundary>
@@ -101,13 +108,14 @@ export default function RootLayout({
           <GlobalEnvironment />
           <ScrollProgress />
           <MotionProvider>
+            <Preloader />
             <a
               href="#main-content"
               className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-white focus:px-4 focus:py-2 focus:text-[var(--color-primary)]"
             >
               Skip to content
             </a>
-            {children}
+            <PageTransition>{children}</PageTransition>
             <ScrollToTop />
           </MotionProvider>
         </ErrorBoundary>

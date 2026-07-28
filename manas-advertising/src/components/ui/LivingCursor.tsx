@@ -9,8 +9,8 @@ export function LivingCursor() {
   const [cursorText, setCursorText] = useState("");
   const [isVisible, setIsVisible] = useState(false);
 
-  const cursorX = useSpring(-100, { stiffness: 500, damping: 28, mass: 0.5 });
-  const cursorY = useSpring(-100, { stiffness: 500, damping: 28, mass: 0.5 });
+  const cursorX = useSpring(-100, { stiffness: 150, damping: 20, mass: 0.8 });
+  const cursorY = useSpring(-100, { stiffness: 150, damping: 20, mass: 0.8 });
 
   useEffect(() => {
     if (reduceMotion || typeof window === "undefined" || window.matchMedia("(pointer: coarse)").matches) return;
@@ -64,7 +64,7 @@ export function LivingCursor() {
 
   return (
     <motion.div
-      className="pointer-events-none fixed left-0 top-0 z-[9999] hidden md:flex items-center justify-center rounded-full bg-[var(--color-accent)] mix-blend-difference will-change-transform"
+      className="pointer-events-none fixed left-0 top-0 z-[9999] hidden md:flex items-center justify-center rounded-full bg-white mix-blend-difference will-change-transform"
       style={{
         x: cursorX,
         y: cursorY,
@@ -76,10 +76,10 @@ export function LivingCursor() {
         height: cursorText ? 64 : isPointer ? 32 : 12,
         opacity: isVisible ? 1 : 0,
       }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      transition={{ type: "spring", stiffness: 200, damping: 25 }}
     >
       <motion.span 
-        className="text-[10px] font-semibold tracking-wider text-white"
+        className="text-[10px] font-semibold tracking-wider text-black mix-blend-difference"
         animate={{ opacity: cursorText ? 1 : 0, scale: cursorText ? 1 : 0.5 }}
       >
         {cursorText}

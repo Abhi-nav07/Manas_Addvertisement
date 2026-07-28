@@ -32,7 +32,7 @@ export function BeforeAfterShowcase() {
             <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-primary)] text-white/80">
               <Image src={portfolioImages[item.slug] || "https://images.unsplash.com/photo-1534067783941-51c9c23ecefd?w=1600&q=80"} alt="After" fill className="object-cover" sizes="100vw" />
               <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)]/40 to-[#132644]/40" />
-              <span className="relative z-10 text-sm font-medium uppercase tracking-wide">
+              <span className="absolute bottom-6 right-6 z-10 rounded-md bg-black/50 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-md">
                 {item.afterLabel}
               </span>
             </div>
@@ -43,7 +43,7 @@ export function BeforeAfterShowcase() {
             >
               <Image src={portfolioImages[item.slug] || "https://images.unsplash.com/photo-1534067783941-51c9c23ecefd?w=1600&q=80"} alt="Before" fill className="object-cover grayscale sepia-[.3] opacity-60" sizes="100vw" />
               <div className="absolute inset-0 bg-black/40" />
-              <span className="relative z-10 text-sm font-medium uppercase tracking-wide">
+              <span className="absolute bottom-6 left-6 z-10 rounded-md bg-black/50 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-md">
                 {item.beforeLabel}
               </span>
             </div>

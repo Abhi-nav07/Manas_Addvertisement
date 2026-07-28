@@ -125,6 +125,12 @@ body {
   font-family: var(--font-body);
 }
 
+@media (pointer: fine) {
+  body {
+    cursor: none;
+  }
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -137,4 +143,26 @@ body {
   .glass-dark {
     @apply bg-primary/40 backdrop-blur-md border border-white/10;
   }
+  
+  @keyframes pulse-slow {
+    0%, 100% { opacity: 0.03; transform: scale(1); }
+    50% { opacity: 0.06; transform: scale(1.05); }
+  }
+  
+  .animate-pulse-slow {
+    animation: pulse-slow 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  @keyframes light-sweep {
+    0% { transform: translateX(-100%) skewX(-15deg); }
+    100% { transform: translateX(200%) skewX(-15deg); }
+  }
+  
+  .animate-light-sweep {
+    animation: light-sweep 15s linear infinite;
+  }
+}
+
+html.preloader-done #preloader {
+  display: none !important;
 }

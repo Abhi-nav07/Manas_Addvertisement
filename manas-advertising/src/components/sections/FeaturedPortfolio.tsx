@@ -1,19 +1,71 @@
+"use client";
+
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useReducedMotion } from "framer-motion";
 import { Container } from "@/components/layout/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Badge } from "@/components/ui/Badge";
-import { Reveal } from "@/components/ui/Reveal";
 import { ParallaxLayer } from "@/motion/parallax";
 import { portfolio, portfolioImages } from "@/constants/content";
+import { CinematicEase } from "@/motion/presets";
 
 export function FeaturedPortfolio() {
   const featured = portfolio.slice(0, 3);
+  
+  const sectionRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (reduceMotion || typeof window === "undefined") return;
+    
+    const ctx = gsap.context(() => {
+      const cards = gsap.utils.toArray(".portfolio-card");
+      
+      // Initial states
+      gsap.set(headerRef.current, { opacity: 0, y: 40 });
+      gsap.set(cards, { opacity: 0, y: 60, scale: 0.98 });
+
+      // The Proof Scene Orchestration
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: "top 75%",
+        onEnter: () => {
+          const tl = gsap.timeline({ defaults: { ease: CinematicEase } });
+          
+          tl.to(headerRef.current, {
+            opacity: 1,
+            y: 0,
+            duration: 1.2
+          })
+          .to(cards, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 1.4,
+            stagger: 0.15
+          }, "-=0.8");
+        }
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, [reduceMotion]);
+
   return (
-    <section id="work" className="bg-neutral-50 py-24">
-      <Container>
-        <div className="mb-14 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+    <section id="work" ref={sectionRef} className="bg-neutral-50 py-24 relative overflow-hidden">
+      <Container className="relative z-10">
+        <div 
+          ref={headerRef} 
+          className="mb-14 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end"
+          style={reduceMotion ? { opacity: 1 } : { opacity: 0 }}
+        >
           <SectionHeading
             eyebrow="Selected Work"
             title="Projects we're proud to have shipped"
@@ -28,17 +80,17 @@ export function FeaturedPortfolio() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          {featured.map((item, i) => {
+        <div ref={cardsRef} className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          {featured.map((item) => {
             const imageUrl = portfolioImages[item.slug] || "https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=1600&q=80";
             
             return (
-              <Reveal key={item.slug} delay={i * 0.08}>
-                <Link href={`/portfolio/${item.slug}`} className="group block">
+              <div key={item.slug} className="portfolio-card" style={reduceMotion ? { opacity: 1 } : { opacity: 0 }}>
+                <Link href={`/portfolio/${item.slug}`} className="group block" data-cursor="hover">
                   <div className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-[var(--color-primary)] transition-transform duration-700 hover:-translate-y-2 hover:shadow-2xl hover:shadow-[var(--color-primary)]/20">
                     
                     {/* Background Image with Zoom and Parallax */}
-                    <div className="absolute -inset-[15%]">
+                    <div className="absolute -inset-[15%] pointer-events-none">
                       <ParallaxLayer speed={0.1} className="h-full w-full">
                         <Image 
                           src={imageUrl} 
@@ -51,8 +103,8 @@ export function FeaturedPortfolio() {
                     </div>
                     
                     {/* Animated Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-primary)] via-[var(--color-primary)]/40 to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-90" />
-                    <div className="absolute inset-0 bg-gradient-to-tr from-[var(--color-accent)]/20 to-transparent opacity-0 mix-blend-overlay transition-opacity duration-700 group-hover:opacity-100" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-primary)] via-[var(--color-primary)]/40 to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-90 pointer-events-none" />
+                    <div className="absolute inset-0 bg-gradient-to-tr from-[var(--color-accent)]/20 to-transparent opacity-0 mix-blend-overlay transition-opacity duration-700 group-hover:opacity-100 pointer-events-none" />
                     
                     {/* Content Reveal */}
                     <div className="absolute inset-0 flex flex-col justify-end p-8 md:translate-y-4 transition-transform duration-500 ease-out md:group-hover:translate-y-0">
@@ -81,7 +133,7 @@ export function FeaturedPortfolio() {
                     </div>
                   </div>
                 </Link>
-              </Reveal>
+              </div>
             );
           })}
         </div>

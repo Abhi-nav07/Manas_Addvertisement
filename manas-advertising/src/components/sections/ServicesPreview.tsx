@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import {
   Sparkles,
@@ -8,11 +11,14 @@ import {
   Compass,
   ArrowRight,
 } from "lucide-react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useReducedMotion } from "framer-motion";
 import { Container } from "@/components/layout/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card } from "@/components/ui/Card";
-import { Reveal } from "@/components/ui/Reveal";
 import { services } from "@/constants/content";
+import { CinematicEase } from "@/motion/presets";
 
 const icons = {
   Sparkles,
@@ -24,10 +30,55 @@ const icons = {
 };
 
 export function ServicesPreview() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (reduceMotion || typeof window === "undefined") return;
+    
+    const ctx = gsap.context(() => {
+      const cards = gsap.utils.toArray(".service-card");
+      
+      // Initial states
+      gsap.set(headerRef.current, { opacity: 0, y: 40 });
+      gsap.set(cards, { opacity: 0, y: 60, scale: 0.98 });
+
+      // The Discovery Scene Orchestration
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: "top 75%",
+        onEnter: () => {
+          const tl = gsap.timeline({ defaults: { ease: CinematicEase } });
+          
+          tl.to(headerRef.current, {
+            opacity: 1,
+            y: 0,
+            duration: 1.2
+          })
+          .to(cards, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 1.2,
+            stagger: 0.1
+          }, "-=0.8");
+        }
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, [reduceMotion]);
+
   return (
-    <section id="services" className="bg-white py-24">
-      <Container>
-        <div className="mb-14 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+    <section id="services" ref={sectionRef} className="bg-white py-24 relative overflow-hidden">
+      <Container className="relative z-10">
+        <div 
+          ref={headerRef} 
+          className="mb-14 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end"
+          style={reduceMotion ? { opacity: 1 } : { opacity: 0 }}
+        >
           <SectionHeading
             eyebrow="What We Do"
             title="Services built to move brands forward"
@@ -42,13 +93,13 @@ export function ServicesPreview() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {services.map((service, i) => {
+        <div ref={cardsRef} className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {services.map((service) => {
             const Icon = icons[service.icon as keyof typeof icons];
             return (
-              <Reveal key={service.slug} delay={i * 0.06}>
+              <div key={service.slug} className="service-card" style={reduceMotion ? { opacity: 1 } : { opacity: 0 }}>
                 <Link href={`/services/${service.slug}`} data-cursor="hover">
-                  <Card className="group h-full">
+                  <Card className="group h-full transition-shadow duration-500 hover:shadow-2xl hover:shadow-[var(--color-accent-rgb)]/10">
                     <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-[var(--color-primary)]/5 text-[var(--color-primary)] transition-all duration-500 group-hover:bg-[var(--color-accent)] group-hover:text-white group-hover:-rotate-6 group-hover:scale-110">
                       <Icon size={24} className="transition-transform duration-500 group-hover:scale-110" />
                     </div>
@@ -67,7 +118,7 @@ export function ServicesPreview() {
                     </span>
                   </Card>
                 </Link>
-              </Reveal>
+              </div>
             );
           })}
         </div>

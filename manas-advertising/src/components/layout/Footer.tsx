@@ -1,10 +1,15 @@
+"use client";
+
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useReducedMotion } from "framer-motion";
 import { Camera, Briefcase, MessageCircle, Mail, MapPin, Phone, ArrowUpRight } from "lucide-react";
 import { Container } from "./Container";
-import { Reveal } from "../ui/Reveal";
 import { MagneticHover } from "../ui/MagneticHover";
+import { CinematicEase } from "@/motion/presets";
 import dynamic from "next/dynamic";
 const AmbientParticles = dynamic(() => import("@/motion/particles").then(mod => mod.AmbientParticles), { ssr: false });
 
@@ -28,8 +33,55 @@ const columns = [
 ];
 
 export function Footer() {
+  const footerRef = useRef<HTMLElement>(null);
+  const headlineRef = useRef<HTMLHeadingElement>(null);
+  const ctaBtnRef = useRef<HTMLDivElement>(null);
+  const columnsRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (reduceMotion || typeof window === "undefined") return;
+
+    const ctx = gsap.context(() => {
+      const colItems = gsap.utils.toArray(".footer-col");
+
+      gsap.set(headlineRef.current, { opacity: 0, y: 40 });
+      gsap.set(ctaBtnRef.current, { opacity: 0, scale: 0.8 });
+      gsap.set(colItems, { opacity: 0, y: 20 });
+
+      // The Footer Closing Scene Orchestration
+      ScrollTrigger.create({
+        trigger: footerRef.current,
+        start: "top 80%",
+        onEnter: () => {
+          const tl = gsap.timeline({ defaults: { ease: CinematicEase } });
+
+          tl.to(headlineRef.current, {
+            opacity: 1,
+            y: 0,
+            duration: 1.2
+          })
+          .to(ctaBtnRef.current, {
+            opacity: 1,
+            scale: 1,
+            duration: 1,
+            ease: "back.out(1.5)"
+          }, "-=0.8")
+          .to(colItems, {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            stagger: 0.1
+          }, "-=0.4");
+        }
+      });
+    }, footerRef);
+
+    return () => ctx.revert();
+  }, [reduceMotion]);
+
   return (
-    <footer className="relative overflow-hidden bg-[var(--color-primary)]/80 pt-32 text-white backdrop-blur-md">
+    <footer ref={footerRef} className="relative overflow-hidden bg-[var(--color-primary)]/80 pt-32 text-white backdrop-blur-md">
       
       {/* Footer Closing Scene Environment */}
       <div className="absolute inset-0 z-0 opacity-40">
@@ -41,14 +93,18 @@ export function Footer() {
       <Container className="relative z-10">
         
         {/* Premium CTA Reveal */}
-        <Reveal delay={0}>
-          <div className="mb-24 text-center">
-            <h2 className="font-display text-[clamp(2.5rem,5vw,4.5rem)] font-semibold leading-tight tracking-tight text-white">
-              Let&apos;s build something <br/>
-              <span className="text-[var(--color-accent)] italic">extraordinary.</span>
-            </h2>
-            <div className="mt-10 flex justify-center">
-              <MagneticHover strength={15}>
+        <div className="mb-24 text-center">
+          <h2 
+            ref={headlineRef}
+            className="font-display text-[clamp(2.5rem,5vw,4.5rem)] font-semibold leading-tight tracking-tight text-white"
+            style={reduceMotion ? { opacity: 1 } : { opacity: 0 }}
+          >
+            Let&apos;s build something <br/>
+            <span className="text-[var(--color-accent)] italic">extraordinary.</span>
+          </h2>
+          <div className="mt-10 flex justify-center">
+            <MagneticHover strength={15}>
+              <div ref={ctaBtnRef} style={reduceMotion ? { opacity: 1 } : { opacity: 0 }}>
                 <Link
                   href="/contact"
                   className="group flex h-32 w-32 flex-col items-center justify-center rounded-full bg-white text-[var(--color-primary)] shadow-2xl transition-transform hover:scale-110 hover:bg-[var(--color-accent)] hover:text-white"
@@ -56,53 +112,52 @@ export function Footer() {
                   <span className="text-sm font-semibold uppercase tracking-wider">Start</span>
                   <ArrowUpRight size={24} className="mt-1 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
                 </Link>
-              </MagneticHover>
+              </div>
+            </MagneticHover>
+          </div>
+        </div>
+
+        <div ref={columnsRef} className="grid grid-cols-1 gap-12 pb-14 md:grid-cols-[1.4fr_1fr_1fr_1.2fr] border-t border-white/5 pt-16">
+          
+          <div className="footer-col" style={reduceMotion ? { opacity: 1 } : { opacity: 0 }}>
+            <MagneticHover strength={5} className="block w-max">
+              <Link href="/" className="group flex items-center">
+                <div className="relative h-12 w-36 overflow-hidden transition-transform duration-500 ease-out group-hover:scale-105">
+                  <Image 
+                    src="https://file.garden/amYCKVkR9Rqi4_W9/Logo" 
+                    alt="Manas Advertising Logo" 
+                    fill 
+                    className="object-contain"
+                    sizes="(max-width: 768px) 144px, 144px"
+                  />
+                </div>
+              </Link>
+            </MagneticHover>
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/60">
+              A premium advertising and branding studio crafting bold identities
+              and campaigns for brands that refuse to blend in.
+            </p>
+            <div className="mt-6 flex gap-4">
+              {[
+                { Icon: Camera, label: "Visit our Instagram" },
+                { Icon: Briefcase, label: "Visit our LinkedIn" },
+                { Icon: MessageCircle, label: "Visit our Twitter" }
+              ].map(({ Icon, label }, i) => (
+                <MagneticHover key={i} strength={8}>
+                  <a
+                    href="#"
+                    aria-label={label}
+                    className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70 transition-all duration-300 hover:border-[var(--color-accent)] hover:bg-[var(--color-accent)]/10 hover:text-[var(--color-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-primary)]"
+                  >
+                    <Icon size={18} />
+                  </a>
+                </MagneticHover>
+              ))}
             </div>
           </div>
-        </Reveal>
 
-        <div className="grid grid-cols-1 gap-12 pb-14 md:grid-cols-[1.4fr_1fr_1fr_1.2fr] border-t border-white/5 pt-16">
-          <Reveal delay={0.1}>
-            <div>
-              <MagneticHover strength={5} className="block w-max">
-                <Link href="/" className="group flex items-center">
-                  <div className="relative h-12 w-36 overflow-hidden transition-transform duration-500 ease-out group-hover:scale-105">
-                    <Image 
-                      src="https://file.garden/amYCKVkR9Rqi4_W9/Logo" 
-                      alt="Manas Advertising Logo" 
-                      fill 
-                      className="object-contain"
-                      sizes="(max-width: 768px) 144px, 144px"
-                    />
-                  </div>
-                </Link>
-              </MagneticHover>
-              <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/60">
-                A premium advertising and branding studio crafting bold identities
-                and campaigns for brands that refuse to blend in.
-              </p>
-              <div className="mt-6 flex gap-4">
-                {[
-                  { Icon: Camera, label: "Visit our Instagram" },
-                  { Icon: Briefcase, label: "Visit our LinkedIn" },
-                  { Icon: MessageCircle, label: "Visit our Twitter" }
-                ].map(({ Icon, label }, i) => (
-                  <MagneticHover key={i} strength={8}>
-                    <a
-                      href="#"
-                      aria-label={label}
-                      className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70 transition-all duration-300 hover:border-[var(--color-accent)] hover:bg-[var(--color-accent)]/10 hover:text-[var(--color-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-primary)]"
-                    >
-                      <Icon size={18} />
-                    </a>
-                  </MagneticHover>
-                ))}
-              </div>
-            </div>
-          </Reveal>
-
-          {columns.map((col, idx) => (
-            <Reveal key={col.title} delay={0.1 * (idx + 2)}>
+          {columns.map((col) => (
+            <div key={col.title} className="footer-col" style={reduceMotion ? { opacity: 1 } : { opacity: 0 }}>
               <nav aria-label={`${col.title} links`}>
                 <h4 className="mb-5 text-xs font-semibold uppercase tracking-widest text-white/40">
                   {col.title}
@@ -124,52 +179,48 @@ export function Footer() {
                   ))}
                 </ul>
               </nav>
-            </Reveal>
+            </div>
           ))}
 
-          <Reveal delay={0.4}>
-            <div>
-              <h4 className="mb-5 text-xs font-semibold uppercase tracking-widest text-white/40">
-                Contact
-              </h4>
-              <ul className="space-y-4 text-sm text-white/70">
-                <li className="flex items-start gap-3 group cursor-default">
-                  <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/5 transition-colors group-hover:bg-[var(--color-accent)]/20">
-                    <MapPin size={14} className="text-[var(--color-accent)]" />
-                  </div>
-                  <span className="transition-colors group-hover:text-white max-w-[200px]">1st Floor Nanaksar Kota Stone, In Front Of ICICI Bank, AB Road, Dewas Naka, Indore (M.P.)</span>
-                </li>
-                <li className="flex items-start gap-3 group">
-                  <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/5 transition-colors group-hover:bg-[var(--color-accent)]/20">
-                    <Phone size={14} className="text-[var(--color-accent)]" />
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <a href="tel:+919827206185" className="transition-colors group-hover:text-white" data-cursor="pointer">+91 98272 06185</a>
-                    <a href="tel:+917470562475" className="transition-colors group-hover:text-white" data-cursor="pointer">+91 74705 62475</a>
-                  </div>
-                </li>
-                <li className="flex items-center gap-3 group">
-                  <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/5 transition-colors group-hover:bg-[var(--color-accent)]/20">
-                    <Mail size={14} className="text-[var(--color-accent)]" />
-                  </div>
-                  <a href="mailto:enquiry@manasadvertising.in" className="transition-colors group-hover:text-white break-all" data-cursor="pointer">
-                    enquiry@manasadvertising.in
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </Reveal>
+          <div className="footer-col" style={reduceMotion ? { opacity: 1 } : { opacity: 0 }}>
+            <h4 className="mb-5 text-xs font-semibold uppercase tracking-widest text-white/40">
+              Contact
+            </h4>
+            <ul className="space-y-4 text-sm text-white/70">
+              <li className="flex items-start gap-3 group cursor-default">
+                <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/5 transition-colors group-hover:bg-[var(--color-accent)]/20">
+                  <MapPin size={14} className="text-[var(--color-accent)]" />
+                </div>
+                <span className="transition-colors group-hover:text-white max-w-[200px]">1st Floor Nanaksar Kota Stone, In Front Of ICICI Bank, AB Road, Dewas Naka, Indore (M.P.)</span>
+              </li>
+              <li className="flex items-start gap-3 group">
+                <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/5 transition-colors group-hover:bg-[var(--color-accent)]/20">
+                  <Phone size={14} className="text-[var(--color-accent)]" />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <a href="tel:+919827206185" className="transition-colors group-hover:text-white" data-cursor="pointer">+91 98272 06185</a>
+                  <a href="tel:+917470562475" className="transition-colors group-hover:text-white" data-cursor="pointer">+91 74705 62475</a>
+                </div>
+              </li>
+              <li className="flex items-center gap-3 group">
+                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/5 transition-colors group-hover:bg-[var(--color-accent)]/20">
+                  <Mail size={14} className="text-[var(--color-accent)]" />
+                </div>
+                <a href="mailto:enquiry@manasadvertising.in" className="transition-colors group-hover:text-white break-all" data-cursor="pointer">
+                  enquiry@manasadvertising.in
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
 
-        <Reveal delay={0.5}>
-          <div className="flex flex-col items-center justify-between gap-4 border-t border-white/5 py-7 text-xs text-white/40 md:flex-row">
-            <p>© {new Date().getFullYear()} Manas Advertising. All rights reserved.</p>
-            <div className="flex gap-6">
-              <Link href="/faq" className="transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] rounded-sm" data-cursor="pointer">Privacy Policy</Link>
-              <Link href="/faq" className="transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] rounded-sm" data-cursor="pointer">Terms of Service</Link>
-            </div>
+        <div className="footer-col flex flex-col items-center justify-between gap-4 border-t border-white/5 py-7 text-xs text-white/40 md:flex-row" style={reduceMotion ? { opacity: 1 } : { opacity: 0 }}>
+          <p>© {new Date().getFullYear()} Manas Advertising. All rights reserved.</p>
+          <div className="flex gap-6">
+            <Link href="/faq" className="transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] rounded-sm" data-cursor="pointer">Privacy Policy</Link>
+            <Link href="/faq" className="transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] rounded-sm" data-cursor="pointer">Terms of Service</Link>
           </div>
-        </Reveal>
+        </div>
       </Container>
     </footer>
   );

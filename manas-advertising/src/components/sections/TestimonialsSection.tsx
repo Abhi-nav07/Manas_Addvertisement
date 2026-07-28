@@ -1,17 +1,24 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Quote, ChevronLeft, ChevronRight } from "lucide-react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Container } from "@/components/layout/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { Reveal } from "@/components/ui/Reveal";
 import { testimonials } from "@/constants/content";
+import { CinematicEase } from "@/motion/presets";
 
 export function TestimonialsSection() {
   const [index, setIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const t = testimonials[index];
+  
+  const sectionRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
 
   const go = useCallback((dir: 1 | -1) => {
     setIndex((i) => (i + dir + testimonials.length) % testimonials.length);
@@ -25,30 +32,64 @@ export function TestimonialsSection() {
     return () => clearInterval(timer);
   }, [isPaused, go]);
 
+  useEffect(() => {
+    if (reduceMotion || typeof window === "undefined") return;
+    
+    const ctx = gsap.context(() => {
+      // Initial states
+      gsap.set([headerRef.current, contentRef.current], { opacity: 0, y: 40 });
+
+      // The Trust Scene Orchestration
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: "top 75%",
+        onEnter: () => {
+          const tl = gsap.timeline({ defaults: { ease: CinematicEase } });
+          
+          tl.to(headerRef.current, {
+            opacity: 1,
+            y: 0,
+            duration: 1.2
+          })
+          .to(contentRef.current, {
+            opacity: 1,
+            y: 0,
+            duration: 1.2
+          }, "-=0.8");
+        }
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, [reduceMotion]);
+
   return (
     <section 
-      className="bg-[var(--color-primary)] py-24"
+      ref={sectionRef}
+      className="bg-[var(--color-primary)] py-24 relative overflow-hidden"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      <Container>
-        <SectionHeading
-          eyebrow="Client Voices"
-          title="What our clients say"
-          align="center"
-          light
-          className="mb-14"
-        />
+      <Container className="relative z-10">
+        <div ref={headerRef} style={reduceMotion ? { opacity: 1 } : { opacity: 0 }}>
+          <SectionHeading
+            eyebrow="Client Voices"
+            title="What our clients say"
+            align="center"
+            light
+            className="mb-14"
+          />
+        </div>
 
-        <Reveal className="relative mx-auto max-w-2xl text-center">
+        <div ref={contentRef} className="relative mx-auto max-w-2xl text-center" style={reduceMotion ? { opacity: 1 } : { opacity: 0 }}>
           <Quote className="mx-auto mb-6 text-[var(--color-accent)]" size={32} />
           <AnimatePresence mode="wait">
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 12, filter: "blur(4px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              exit={{ opacity: 0, y: -12, filter: "blur(4px)" }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
+              initial={reduceMotion ? { opacity: 0 } : { opacity: 0, filter: "blur(12px)", scale: 1.02 }}
+              animate={reduceMotion ? { opacity: 1 } : { opacity: 1, filter: "blur(0px)", scale: 1 }}
+              exit={reduceMotion ? { opacity: 0 } : { opacity: 0, filter: "blur(12px)", scale: 0.98 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} // Approximates CinematicEase (power4.out)
             >
               <p className="font-display text-xl font-medium leading-relaxed text-white md:text-2xl">
                 &ldquo;{t.quote}&rdquo;
@@ -92,7 +133,7 @@ export function TestimonialsSection() {
               <ChevronRight size={18} />
             </button>
           </div>
-        </Reveal>
+        </div>
       </Container>
     </section>
   );

@@ -1,29 +1,46 @@
 "use client";
 
-import { useEffect, ReactNode } from "react";
+import { useEffect, ReactNode, createContext, useState, useContext } from "react";
 import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { usePathname } from "next/navigation";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
+interface PreloaderContextType {
+  preloaderFinished: boolean;
+  setPreloaderFinished: (finished: boolean) => void;
+  lenisInstance: Lenis | null;
+}
+
+const PreloaderContext = createContext<PreloaderContextType>({
+  preloaderFinished: false,
+  setPreloaderFinished: () => {},
+  lenisInstance: null,
+});
+
+export const usePreloader = () => useContext(PreloaderContext);
+
 export function MotionProvider({ children }: { children: ReactNode }) {
-  const pathname = usePathname();
+  // Default to false. The Preloader will set this to true if it skips or finishes.
+  // This completely solves the race condition where Hero starts animating before the Preloader takes control.
+  const [preloaderFinished, setPreloaderFinished] = useState(false); 
+  const [lenisInstance, setLenisInstance] = useState<Lenis | null>(null);
 
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      duration: 1.5,
+      easing: (t) => 1 - Math.pow(1 - t, 4), // Quartic ease out for cinematic feel
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
-      wheelMultiplier: 1,
+      wheelMultiplier: 0.85,
       touchMultiplier: 2,
     });
 
+    setLenisInstance(lenis);
     lenis.on("scroll", ScrollTrigger.update);
 
     const updateLenis = (time: number) => {
@@ -36,14 +53,13 @@ export function MotionProvider({ children }: { children: ReactNode }) {
     return () => {
       gsap.ticker.remove(updateLenis);
       lenis.destroy();
+      setLenisInstance(null);
     };
   }, []);
 
-  useEffect(() => {
-    // Reset scroll position and refresh ScrollTrigger on route change
-    window.scrollTo(0, 0);
-    ScrollTrigger.refresh();
-  }, [pathname]);
-
-  return <>{children}</>;
+  return (
+    <PreloaderContext.Provider value={{ preloaderFinished, setPreloaderFinished, lenisInstance }}>
+      {children}
+    </PreloaderContext.Provider>
+  );
 }

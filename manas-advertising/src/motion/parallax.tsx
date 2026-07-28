@@ -9,9 +9,10 @@ interface ParallaxProps {
   children: React.ReactNode;
   className?: string;
   speed?: number; // Adjust intensity
+  style?: React.CSSProperties;
 }
 
-export function ParallaxLayer({ children, className, speed = 1 }: ParallaxProps) {
+export function ParallaxLayer({ children, className, speed = 1, style }: ParallaxProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const targetRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
@@ -36,7 +37,7 @@ export function ParallaxLayer({ children, className, speed = 1 }: ParallaxProps)
   }, { scope: containerRef, dependencies: [reduceMotion, speed] });
 
   return (
-    <div ref={containerRef} className={`overflow-hidden ${className || ""}`}>
+    <div ref={containerRef} className={`overflow-hidden ${className || ""}`} style={style}>
       <div ref={targetRef} className="h-full w-full">
         {children}
       </div>
